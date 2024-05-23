@@ -1,7 +1,12 @@
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from app.api import notes, ping
 from app.db.db import engine, metadata, database
+
+load_dotenv()
+
+metadata.create_all(engine)
 
 app = FastAPI()
 
