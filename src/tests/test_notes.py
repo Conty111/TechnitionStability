@@ -1,12 +1,11 @@
 import pytest
-import json
 import logging
 from app.services import crud
 
 # logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def test_create_note(test_app, monkeypatch):
+def test_create_note(test_app, monkeypatch) -> None:
     test_request_payload = {"title": "something", "description": "something else"}
     test_response_payload = {"id": 1, "title": "something", "description": "something else"}
 

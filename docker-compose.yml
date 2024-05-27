@@ -1,4 +1,4 @@
-version: '2.0'
+version: '3.8'
 
 services:
   web:
@@ -12,9 +12,72 @@ services:
     ports:
       - 8002:8000
   
-  db:
-    image: postgres:12.1-alpine
+  postgres:
+    image: "postgres:15"
+    container_name: "postgres"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: "512mb"
+    #     reservations:
+    #       memory: "256mb"
+    # shm_size: "128mb"
+    user: "postgres"
+    command:
+      - "postgres"
+      - "-c"
+      - "log_statement=all"
+      - "-c"
+      - 'max_connections=100'
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-d", "postgres", "-U", "postgres" ]
+      interval: "10s"
+      timeout: "2s"
+      retries: 3
+      start_period: "15s"
     environment:
-      - POSTGRES_USER=hello_fastapi
-      - POSTGRES_PASSWORD=hello_fastapi
-      - POSTGRES_DB=hello_fastapi_dev
+      POSTGRES_PASSWORD: "hello_fastapi"
+      POSTGRES_USER: "hello_fastapi"
+      POSTGRES_DB: "hello_fastapi_dev"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "pgdata:/var/lib/postgresql/data:rw"
+    ports:
+      - "127.0.0.1:5432:5432/tcp"
+    logging: &logging
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: "unless-stopped"
+
+  
+  # Restarts unhealth containers
+  autoheal:
+    image: "willfarrell/autoheal:latest"
+    container_name: "autoheal"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: "16mb"
+        reservations:
+          memory: "8mb"
+    privileged: true
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: "autoheal"
+      AUTOHEAL_START_PERIOD: "0"
+      AUTOHEAL_INTERVAL: "5"
+      AUTOHEAL_DEFAULT_STOP_TIMEOUT: "15"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    network_mode: "none"
+    logging: *logging
+    restart: "unless-stopped"
+
+
+volumes:
+  pgdata:
+    - "db/data"
