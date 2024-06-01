@@ -8,10 +8,11 @@ from app.entieties.schema.enums import Location
 
 
 class HardwareModel(Base, Utilization):
-    __tablename__ = "virtual_machine"
+    __tablename__ = "hardware"
     name = Column(String(50), nullable=False)
     monitoring = Column(Boolean, nullable=False, default=False)
-    system_id = Column(UUID(as_uuid=True), ForeignKey("info_system.id"), nullable=False)
+    product_id = Column(UUID(as_uuid=True), ForeignKey("catalog.id"), nullable=False)
+    hardware_type_id = Column(UUID(as_uuid=True), ForeignKey("hardware_type.id"), nullable=False)
     location = Column(Enum(Location), nullable=False)
     internal_support = Column(Boolean, nullable=False, default=False)
     clusters = Column(ARRAY(String(50)), nullable=True)
@@ -20,4 +21,12 @@ class HardwareModel(Base, Utilization):
 
     software = relationship("SoftwareModel", secondary=software_hardware, back_populates="hardware")
     product = relationship("CatalogModel", back_populates="hardware")
+    hardware_type = relationship("HardwareTypesModel", back_populates="hardware")
+
+
+class HardwareTypesModel(Base):
+    __tablename__ = "hardware_types"
+    name = Column(String(50), nullable=False)
+
+    hardware = relationship("HardwareModel", back_populates="hardware_types")
 
