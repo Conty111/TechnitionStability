@@ -1,20 +1,18 @@
 from contextlib import asynccontextmanager
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from app.api import notes, ping
-from app.db import engine, metadata, database
+from app.db import async_session, metadata, engine
 
-load_dotenv()
-
-metadata.create_all(engine)
 
 app = FastAPI()
 
 @asynccontextmanager
 async def lifespan():
-    await database.connect()
+    async with engine.begin() as conn:
+        await conn.run_sync(metadata.create_all)
+    await async_session.connect()
     yield
-    await database.disconnect()
+    await async_session.disconnect()
 
 app.include_router(ping.router)
-app.include_router(notes.router, prefix="/notes", tags=["notes"])
+# app.include_router(notes.router, prefix="/notes", tags=["notes"])

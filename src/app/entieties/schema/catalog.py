@@ -1,17 +1,23 @@
-from pydantic import BaseModel, Field
-import uuid
-from datetime import datetime
+from pydantic import BaseModel
+from uuid import UUID
 
 from app.entieties.schema.enums import ProductType
 
-
-class CatalogSchema(BaseModel):
-    name: str = Field(..., min_length=3, max_length=50)
-    vendor_id: uuid.UUID
+class CatalogBase(BaseModel):
+    name: str
+    vendor_id: UUID
+    support: bool = False
     product: ProductType
     version: str
 
-class CatalogDB(CatalogSchema):
-    id: uuid.UUID
-    created_at: datetime
-    deleted_at: datetime = None
+class CatalogCreate(CatalogBase):
+    pass
+
+class CatalogUpdate(CatalogBase):
+    pass
+
+class Catalog(CatalogBase):
+    id: UUID
+
+    class Config:
+        orm_mode = True
