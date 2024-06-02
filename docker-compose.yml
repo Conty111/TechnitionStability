@@ -80,4 +80,4 @@ services:
 
 volumes:
   pgdata:
-    - "db/data"
+    # - "db/data"
