@@ -15,14 +15,14 @@ services:
   postgres:
     image: "postgres:15"
     container_name: "postgres"
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '2'
-    #       memory: "512mb"
-    #     reservations:
-    #       memory: "256mb"
-    # shm_size: "128mb"
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: "512mb"
+        reservations:
+          memory: "256mb"
+    shm_size: "128mb"
     user: "postgres"
     command:
       - "postgres"
@@ -42,7 +42,7 @@ services:
       POSTGRES_DB: "hello_fastapi_dev"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "pgdata:/var/lib/postgresql/data:rw"
+      - "./db/data:/var/lib/postgresql/data"
     ports:
       - "127.0.0.1:5432:5432/tcp"
     logging: &logging
@@ -51,7 +51,6 @@ services:
         max-size: "10m"
         max-file: "3"
     restart: "unless-stopped"
-
   
   # Restarts unhealth containers
   autoheal:
@@ -80,4 +79,3 @@ services:
 
 volumes:
   pgdata:
-    - "db/data"
