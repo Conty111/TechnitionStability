@@ -1,13 +1,24 @@
-from pydantic import BaseModel, Field
-import uuid
-from datetime import datetime
+from pydantic import BaseModel
+from uuid import UUID
+from typing import List
 
 
-class VendorSchema(BaseModel):
-    name: str = Field(..., min_length=3, max_length=50)
-    country: str = Field(..., min_length=2, max_length=50)
+class VendorBase(BaseModel):
+    name: str
+    country: str
 
-class VendorDB(VendorSchema):
-    id: uuid.UUID
-    created_at: datetime
-    deleted_at: datetime = None
+
+class VendorCreate(VendorBase):
+    pass
+
+
+class VendorUpdate(VendorBase):
+    pass
+
+
+class Vendor(VendorBase):
+    id: UUID
+    products: List[UUID]  # Assuming you'll want a list of product IDs
+
+    class Config:
+        orm_mode = True
