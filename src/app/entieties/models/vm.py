@@ -2,12 +2,13 @@ from sqlalchemy import Column, String, Boolean, ForeignKey, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from app.entieties.models.base import Base, Utilization
+from app.entieties.models.base import BaseModel, Utilization
 from app.entieties.models.association import host_software
 from app.entieties.schema.enums import Location
+from app.db import Base
 
 
-class VirtualMachineModel(Base, Utilization):
+class VirtualMachineModel(Base, BaseModel, Utilization):
     __tablename__ = "virtual_machine"
     name = Column(String(50), nullable=False)
     monitoring = Column(Boolean, nullable=False, default=False)

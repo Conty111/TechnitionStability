@@ -30,10 +30,7 @@ config.set_main_option("sqlalchemy.url", getenv("DATABASE_URL"))
 import sys
 sys.path.append('.')
 from app.db import Base  # Импортируйте ваш объект Base
-from app.entieties.models.notes import NoteModel
-from app.entieties.models.vendor import VendorModel
-from app.entieties.models.catalog import CatalogModel
-
+import app.entieties.models
 
 target_metadata = Base.metadata
 
