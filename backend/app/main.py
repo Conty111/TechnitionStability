@@ -1,10 +1,26 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.api import notes, ping
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.api import ping
 from app.db import async_session, metadata, engine
 
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @asynccontextmanager
 async def lifespan():
