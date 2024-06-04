@@ -30,5 +30,5 @@ async def lifespan():
     yield
     await async_session.disconnect()
 
-app.include_router(ping.router)
+app.include_router(ping.router, tags=["ping"])
 # app.include_router(notes.router, prefix="/notes", tags=["notes"])

@@ -6,3 +6,4 @@ from app.entieties.models.software import *
 from app.entieties.models.vendor import *
 from app.entieties.models.vm import *
 from app.entieties.models.association import *
+from app.entieties.models.tech_stability import *
