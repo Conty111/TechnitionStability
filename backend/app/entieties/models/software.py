@@ -10,9 +10,9 @@ from app.db import Base
 class SoftwareModel(Base, BaseModel):
     __tablename__ = "software"
     name = Column(String(50), nullable=False)
-    product_id = Column(UUID(as_uuid=True), ForeignKey("catalog.id"), nullable=False)
+    product_id = Column(UUID(as_uuid=True), ForeignKey("catalog.id"), nullable=True)
     software_type_id = Column(UUID(as_uuid=True), ForeignKey("software_types.id"), nullable=False)
-
+    
     product = relationship("CatalogModel", back_populates="software")
     hosts = relationship("VirtualMachineModel", secondary=host_software, back_populates="software")
     software_type = relationship("SoftwareTypesModel", back_populates="software")

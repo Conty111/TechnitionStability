@@ -15,7 +15,6 @@ class HardwareModel(Base, BaseModel, Utilization):
     product_id = Column(UUID(as_uuid=True), ForeignKey("catalog.id"), nullable=False)
     hardware_type_id = Column(UUID(as_uuid=True), ForeignKey("hardware_types.id"), nullable=False)
     location = Column(Enum(Location), nullable=False)
-    internal_support = Column(Boolean, nullable=False, default=False)
     clusters = Column(ARRAY(String(50)), nullable=True)
     model = Column(String(150), nullable=True)
     ports_count = Column(Integer, nullable=True)

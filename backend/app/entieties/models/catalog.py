@@ -15,6 +15,7 @@ class CatalogModel(Base, BaseModel):
     support = Column(Boolean, nullable=False, default=False)
     product = Column(Enum(ProductType), nullable=False)
     version = Column(String, nullable=False)
+    purchase_available = Column(Boolean, nullable=False, default=False)
 
     vendor = relationship("VendorModel", back_populates="catalog")
     hardware = relationship("HardwareModel", back_populates="catalog")
