@@ -20,7 +20,7 @@ class HardwareTechStabilityModel(Base):
     mem_util = Column(Float, nullable=False)
     compliance_standarts = Column(Float, nullable=True)
 
-    info_system = relationship("InfoSystemModel", back_populates="hardware_tech_stability")
+    info_system = relationship("InfoSystemModel", backref="hardware_tech_stability")
 
 
 class SoftwareTechStabilityModel(Base):
@@ -38,4 +38,4 @@ class SoftwareTechStabilityModel(Base):
     compliance_standarts = Column(Float, nullable=False)
     purchase_available = Column(Float, nullable=False)
 
-    info_system = relationship("InfoSystemModel", back_populates="software_tech_stability")
+    info_system = relationship("InfoSystemModel", backref="software_tech_stability")

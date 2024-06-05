@@ -21,4 +21,4 @@ class Vendor(VendorBase):
     products: List[UUID]  # Assuming you'll want a list of product IDs
 
     class Config:
-        orm_mode = True
+        from_attributes = True

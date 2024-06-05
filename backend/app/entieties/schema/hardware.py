@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from uuid import UUID
-from typing import Optional, List
+from typing import List
 
 from app.entieties.schema.enums import Location
 
@@ -12,9 +12,9 @@ class HardwareBase(BaseModel):
     hardware_type_id: UUID
     location: Location
     internal_support: bool
-    clusters: Optional[List[str]] = None
-    model: Optional[str] = None
-    ports_count: Optional[int] = None
+    clusters: List[str] | None = None
+    model: str | None = None
+    ports_count: int | None = None
 
 
 class HardwareCreate(HardwareBase):
@@ -30,7 +30,7 @@ class Hardware(HardwareBase):
     software: List[UUID]  # Assuming you'll want a list of software IDs
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class HardwareTypeBase(BaseModel):
@@ -50,4 +50,4 @@ class HardwareType(HardwareTypeBase):
     hardware: List[UUID]  # Assuming you'll want a list of hardware IDs
 
     class Config:
-        orm_mode = True
+        from_attributes = True

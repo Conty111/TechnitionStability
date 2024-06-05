@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, ForeignKey
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -22,5 +22,5 @@ class SoftwareTypesModel(Base, BaseModel):
     __tablename__ = "software_types"
     name = Column(String(50), nullable=False)
 
-    software = relationship("SoftwareModel", back_populates="software_types")
+    software = relationship("SoftwareModel", back_populates="software_type")
 

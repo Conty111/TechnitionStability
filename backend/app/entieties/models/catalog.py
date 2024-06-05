@@ -17,6 +17,6 @@ class CatalogModel(Base, BaseModel):
     version = Column(String, nullable=False)
     purchase_available = Column(Boolean, nullable=False, default=False)
 
-    vendor = relationship("VendorModel", back_populates="catalog")
-    hardware = relationship("HardwareModel", back_populates="catalog")
-    software = relationship("SoftwareModel", back_populates="catalog")
+    vendor = relationship("VendorModel", back_populates="products", viewonly=True)
+    hardware = relationship("HardwareModel", back_populates="product")
+    software = relationship("SoftwareModel", back_populates="product")

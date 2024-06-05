@@ -2,7 +2,7 @@ from typing import List
 
 from sqlalchemy import Column, String, Boolean, ForeignKey, Enum
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from app.entieties.models.base import BaseModel, Utilization
 from app.entieties.models.association import host_software
@@ -21,5 +21,5 @@ class VirtualMachineModel(Base, BaseModel, Utilization):
     location = Column(Enum(Location), nullable=False)
     cluster = Column(String(50), nullable=False)
 
-    software: List[SoftwareModel] = relationship("SoftwareModel", secondary=host_software, back_populates="virtual_machine")
-    info_system: InfoSystemModel = relationship("InfoSystemModel", back_populates="virtual_machine")
+    software: Mapped[List[SoftwareModel]] = relationship("SoftwareModel", secondary=host_software, back_populates="hosts")
+    info_system: Mapped[InfoSystemModel] = relationship("InfoSystemModel", back_populates="hosts")

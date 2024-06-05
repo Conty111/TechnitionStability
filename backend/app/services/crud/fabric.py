@@ -1,4 +1,6 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from typing import Type, TypeVar, Generic, List
 from pydantic import BaseModel
 from uuid import UUID
@@ -16,36 +18,38 @@ class FabricCRUD(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]):
         self.model = model
 
-    def get(self, db: Session, id: UUID) -> ModelType:
-        return db.query(self.model).filter(self.model.id == id).first()
+    async def get(self, db: AsyncSession, id: UUID) -> ModelType:
+        return await db.get(self.model, id)
 
-    def get_multi(self, db: Session, skip: int = 0, limit: int = 10) -> List[ModelType]:
-        return db.query(self.model).offset(skip).limit(limit).all()
-
-    def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
+    async def get_multi(self, db: AsyncSession, skip: int = 0, limit: int = 10) -> List[ModelType]:
+        query = text("SELECT * FROM " + self.model.__tablename__ + f" OFFSET {skip} LIMIT {limit}")
+        result = await db.execute(query)
+        rows = result.fetchall()
+        objects = [self.model(**row._asdict()) for row in rows]
+        return objects
+    
+    async def create(self, db: AsyncSession, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = obj_in.model_dump()
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
+
         return db_obj
 
-    def update(self, db: Session, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
+    async def update(self, db: AsyncSession, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
         obj_data = db_obj.dict()
         update_data = obj_in.model_dump(exclude_unset=True)
         for field in obj_data:
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
-        db.commit()
-        db.refresh(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
         return db_obj
 
-    def remove(self, db: Session, id: UUID) -> ModelType:
-        obj = db.query(self.model).get(id)
+    async def remove(self, db: AsyncSession, id: UUID) -> ModelType:
+        obj = await db.get(self.model, id)
         if obj:
             db.delete(obj)
-            db.commit()
+            await db.commit()
         return obj
-
-
-

@@ -1,5 +1,5 @@
-from sqlalchemy import Column, String, Boolean, Integer, ARRAY, ForeignKey, Enum
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, Boolean, Integer, ForeignKey, Enum
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from sqlalchemy.orm import relationship
 
 from app.entieties.models.base import BaseModel, Utilization
@@ -19,7 +19,7 @@ class HardwareModel(Base, BaseModel, Utilization):
     model = Column(String(150), nullable=True)
     ports_count = Column(Integer, nullable=True)
 
-    software = relationship("SoftwareModel", secondary=software_hardware, back_populates="hardware")
+    software = relationship("SoftwareModel", secondary=software_hardware, backref="hardware")
     product = relationship("CatalogModel", back_populates="hardware")
     hardware_type = relationship("HardwareTypesModel", back_populates="hardware")
 
@@ -28,5 +28,5 @@ class HardwareTypesModel(Base, BaseModel):
     __tablename__ = "hardware_types"
     name = Column(String(50), nullable=False)
 
-    hardware = relationship("HardwareModel", back_populates="hardware_types")
+    hardware = relationship("HardwareModel", back_populates="hardware_type")
 

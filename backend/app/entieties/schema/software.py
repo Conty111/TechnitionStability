@@ -22,7 +22,7 @@ class Software(SoftwareBase):
     hosts: List[UUID]  # Assuming you'll want a list of host IDs here
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class SoftwareTypeBase(BaseModel):
@@ -42,4 +42,4 @@ class SoftwareType(SoftwareTypeBase):
     software: List[UUID]  # Assuming you'll want a list of software IDs here
 
     class Config:
-        orm_mode = True
+        from_attributes = True
