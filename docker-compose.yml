@@ -32,6 +32,7 @@ services:
   postgres:
     image: "postgres:15"
     container_name: "postgres"
+    # user: postgres
     deploy:
       resources:
         limits:
@@ -53,13 +54,13 @@ services:
       retries: 3
       start_period: "15s"
     environment:
-      POSTGRES_PASSWORD: "hello_fastapi"
-      POSTGRES_USER: "hello_fastapi"
-      POSTGRES_DB: "hello_fastapi_dev"
+      POSTGRES_PASSWORD: hello_fastapi
+      POSTGRES_USER: hello_fastapi
+      POSTGRES_DB: hello_fastapi_dev
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "./db/data:/var/lib/postgresql/data"
-      - ./db_dump.sql:/docker-entrypoint-initdb.d/db_dump.sql
+      - pgdata:/var/lib/postgresql/data
+      - ./dump:/docker-entrypoint-initdb.d/
     ports:
       - "127.0.0.1:5432:5432/tcp"
     logging: &logging

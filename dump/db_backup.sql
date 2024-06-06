@@ -21,6 +21,8 @@ SET row_security = off;
 --
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
+-- CREATE ROLE hello_fastapi WITH LOGIN PASSWORD 'hello_fastapi';
+CREATE ROLE postgres WITH LOGIN PASSWORD 'postgres';
 
 
 --
