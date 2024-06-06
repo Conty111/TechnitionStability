@@ -2,7 +2,7 @@
 FROM python:3.11.9-alpine
 
 # set work directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src
 
 # set environment variables
 # Prevents Python from writing pyc files to disc (equivalent to python -B option)
@@ -24,4 +24,4 @@ RUN set -eux \
     && rm -rf /root/.cache/pip
 
 # copy project
-COPY . /usr/src/app/
+COPY app/ /usr/src/app/

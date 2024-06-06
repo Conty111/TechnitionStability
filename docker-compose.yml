@@ -1,16 +1,33 @@
 version: '3.8'
 
 services:
-  web:
-    build: ./src
-    container_name: technition-web
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     environment:
-      - DATABASE_URL=postgresql://hello_fastapi:hello_fastapi@db/hello_fastapi_dev
+      - DATABASE_URL=postgresql+asyncpg://hello_fastapi:hello_fastapi@postgres/hello_fastapi_dev
     volumes:
-      - ./src/:/usr/src/app/
+      - ./backend/app:/usr/src/app/
     ports:
-      - 8002:8000
+      - 8000:8000
+    depends_on:
+      - postgres
+  
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8000
+      - REACT_APP_GRAFANA_URL=http://localhost:3001/d/ednyocwlq718gd/informacionnaja-sistema-1?orgId=1&from=1717618221595&to=1717704621595
+    depends_on:
+      - backend
   
   postgres:
     image: "postgres:15"
@@ -52,29 +69,42 @@ services:
         max-file: "3"
     restart: "unless-stopped"
   
-  # Restarts unhealth containers
-  autoheal:
-    image: "willfarrell/autoheal:latest"
-    container_name: "autoheal"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.05'
-          memory: "16mb"
-        reservations:
-          memory: "8mb"
-    privileged: true
-    environment:
-      AUTOHEAL_CONTAINER_LABEL: "autoheal"
-      AUTOHEAL_START_PERIOD: "0"
-      AUTOHEAL_INTERVAL: "5"
-      AUTOHEAL_DEFAULT_STOP_TIMEOUT: "15"
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    network_mode: "none"
-    logging: *logging
-    restart: "unless-stopped"
+      - ./db/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    restart: always
+    depends_on:
+      - postgres
+  
+  # Restarts unhealth containers
+  # autoheal:
+  #   image: "willfarrell/autoheal:latest"
+  #   container_name: "autoheal"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.05'
+  #         memory: "16mb"
+  #       reservations:
+  #         memory: "8mb"
+  #   privileged: true
+  #   environment:
+  #     AUTOHEAL_CONTAINER_LABEL: "autoheal"
+  #     AUTOHEAL_START_PERIOD: "0"
+  #     AUTOHEAL_INTERVAL: "5"
+  #     AUTOHEAL_DEFAULT_STOP_TIMEOUT: "15"
+  #   volumes:
+  #     - "/etc/localtime:/etc/localtime:ro"
+  #     - "/var/run/docker.sock:/var/run/docker.sock"
+  #   network_mode: "none"
+  #   logging: *logging
+  #   restart: "unless-stopped"
 
 
 volumes:

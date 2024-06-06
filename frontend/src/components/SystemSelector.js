@@ -1,27 +1,15 @@
-import React, { useState } from 'react';
-import { SelectorContainer, Select, Option } from '../styles';
+import React from 'react';
+import { DetailContainer, DetailItem, CalculateButton } from '../styles';
 
-const systems = ['Система A', 'Система B', 'Система C', 'Система D'];
-
-function SystemSelector() {
-  const [selectedSystem, setSelectedSystem] = useState('');
-
-  const handleSelectChange = (event) => {
-    setSelectedSystem(event.target.value);
-  };
-
+const SystemSelector = ({ systems, onSelect }) => {
   return (
-    <SelectorContainer>
-      <Select value={selectedSystem} onChange={handleSelectChange}>
-        <Option value="">Выберите систему</Option>
-        {systems.map((system, index) => (
-          <Option key={index} value={system}>
-            {system}
-          </Option>
-        ))}
-      </Select>
-      {selectedSystem && <p>Вы выбрали: {selectedSystem}</p>}
-    </SelectorContainer>
+    <DetailContainer>
+      {systems.map(system => (
+        <DetailItem key={system.id} onClick={() => onSelect(system)}>
+          <CalculateButton>{system.name}</CalculateButton>
+        </DetailItem>
+      ))}
+    </DetailContainer>
   );
 }
 

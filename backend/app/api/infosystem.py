@@ -39,7 +39,7 @@ async def calculate_tech_stability(id: str = Path(...), db: AsyncSession = Depen
 @router.get("/")
 async def info_systems(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
     info_systems: List[InfoSystemModel] = await info_system_crud.get_multi(db=db, skip=skip, limit=limit)
-    return [InfoSystem.model_validate(info_system).model_dump_json() for info_system in info_systems]
+    return [InfoSystem.model_validate(info_system).model_dump() for info_system in info_systems]
 
 @router.post("/create")
 async def info_systems(request: Request, db: AsyncSession = Depends(get_db)):
