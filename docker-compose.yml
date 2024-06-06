@@ -40,7 +40,6 @@ services:
         reservations:
           memory: "256mb"
     shm_size: "128mb"
-    user: "postgres"
     command:
       - "postgres"
       - "-c"
@@ -60,6 +59,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "./db/data:/var/lib/postgresql/data"
+      - ./db_dump.sql:/docker-entrypoint-initdb.d/db_dump.sql
     ports:
       - "127.0.0.1:5432:5432/tcp"
     logging: &logging
