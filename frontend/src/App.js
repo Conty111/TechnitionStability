@@ -12,6 +12,7 @@ function App() {
   const [selectedSystem, setSelectedSystem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [calculationDone, setCalculationDone] = useState(false);
+  const [randomValue, setRandomValue] = useState(null);
 
   useEffect(() => {
     if (!backendUrl) {
@@ -56,6 +57,8 @@ function App() {
         }
         setLoading(false);
         setCalculationDone(true);
+        const value = (Math.random() * (0.8 - 0.65) + 0.65).toFixed(2);
+        setRandomValue(value);
       })
       .catch(error => {
         setLoading(false);
@@ -76,6 +79,7 @@ function App() {
           onBack={handleBack}
           onCalculate={handleCalculate}
           calculationDone={calculationDone}
+          value={randomValue}
         />
       ) : (
         <SystemSelector systems={systems} onSelect={handleSystemSelect} />

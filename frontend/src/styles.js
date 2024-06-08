@@ -87,3 +87,18 @@ export const Logo = styled.img`
   height: auto;
   margin: 0 auto 20px; /* Центрируем логотип */
 `;
+
+export const RandomValueContainer = styled.div`
+  margin: 20px auto;
+`;
+
+export const RandomValueLabel = styled.div`
+  font-size: 1.5em;
+  margin-bottom: 10px;
+`;
+
+export const RandomValue = styled.div`
+  font-size: 2em;
+  font-weight: bold;
+  color: ${props => props.value < 0.7 ? 'orange' : 'green'};
+`;
