@@ -11,7 +11,7 @@ const SystemDetails = ({ system, onBack, onCalculate, calculationDone, value }) 
       <DetailItem><strong>Created At:</strong> {formattedDate}</DetailItem>
       {!calculationDone &&<CalculateButton onClick={onCalculate}>Рассчитать тех. устойчивость</CalculateButton>}
       {calculationDone && <RandomValueContainer>
-        {<RandomValueLabel>Текущий показатель технологической устойчивостиь</RandomValueLabel>}
+        {<RandomValueLabel>Текущий показатель технологической устойчивости</RandomValueLabel>}
         {<RandomValue value={value}>{value}</RandomValue>}
         </RandomValueContainer>}
       {calculationDone && <GrafanaButton href={grafanaUrl} target="_blank">Результаты вычислений в Grafana</GrafanaButton>}
